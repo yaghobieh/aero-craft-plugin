@@ -1,0 +1,63 @@
+{
+  "name": "aerocraft-bear-forgestack",
+  "displayName": "AeroCraft & Bear (ForgeStack)",
+  "description": "AeroCraft class completions from the real utility catalog, hovers with color swatches, and Bear JSX hints. Optional Tailwind-style alias mode.",
+  "version": "0.1.1",
+  "publisher": "forgestack",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:html",
+    "onLanguage:css",
+    "onLanguage:typescript",
+    "onLanguage:typescriptreact",
+    "workspaceContains:**/aerocraft.config.*"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "AeroCraft & Bear",
+      "properties": {
+        "aerocraft.enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "description": "Suggest AeroCraft classes in class/className/@apply, Bear JSX props on supported tags, and enable related hovers."
+        },
+        "aerocraft.utilityAliasMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Also suggest parallel utility-style names (e.g. flex flex-col) next to AeroCraft shortcuts for teams mixing stacks."
+        },
+        "bear.enableComponentSnippets": {
+          "type": "boolean",
+          "default": true,
+          "description": "Register Bear import and JSX snippets in TypeScript React."
+        }
+      }
+    },
+    "snippets": [
+      {
+        "language": "typescriptreact",
+        "path": "./snippets/bear.json"
+      }
+    ]
+  },
+  "scripts": {
+    "postinstall": "tsc -p ./",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "dependencies": {
+    "@forgedevstack/aerocraft": "git+https://github.com/yaghobieh/aero-craft.git#release/1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.7",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.7.3"
+  }
+}

@@ -1,0 +1,18 @@
+export const BEAR_COMPONENT_HINTS: Record<string, string> = {
+  Button: '`Button` — props: variant (primary | secondary | outline | ghost | danger), size (xs | sm | md | lg), leftIcon, rightIcon, loading, disabled, fullWidth.',
+  Card: '`Card` — props: padding (none | sm | md | lg), radius (none | sm | md | lg | full), variant, hoverable.',
+  Flex: '`Flex` — props: direction (row | column), align, justify, gap (0–12), wrap, grow.',
+  Typography: '`Typography` — props: variant (h1–h6 | body1 | body2 | caption | overline), weight, color (primary | secondary | muted | danger | success).',
+  Input: '`Input` — props: label, error, helperText, leftIcon, rightIcon, disabled, fullWidth.',
+  Badge: '`Badge` — props: variant, size, dot.',
+  Spinner: '`Spinner` — props: size (xs | sm | md | lg).',
+  Modal: '`Modal` — props: open, onClose, title, size, closeOnOverlay.',
+  Drawer: '`Drawer` — props: open, onClose, placement, title.',
+  Tabs: '`Tabs` — composition with TabList / Tab; controlled or uncontrolled selected id.',
+  AppBar: '`AppBar` — props: position, leftContent, rightContent.',
+  Sidebar: '`Sidebar` — props: items, activeItemId, onItemClick, collapsible.',
+  Dropdown: '`Dropdown` — props: trigger, placement, items.',
+  Select: '`Select` — props: options, value, onChange, placeholder, error.',
+  Chip: '`Chip` — props: variant, size, onRemove.',
+  Alert: '`Alert` — props: variant (info | success | warning | error), title, onClose.',
+};

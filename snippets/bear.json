@@ -1,0 +1,26 @@
+{
+  "BearProvider": {
+    "prefix": "bear",
+    "body": [
+      "import { BearProvider } from '@forgedevstack/bear';",
+      "",
+      "export function App() {",
+      "  return (",
+      "    <BearProvider>",
+      "      $0",
+      "    </BearProvider>",
+      "  );",
+      "}"
+    ],
+    "description": "Wrap app with BearProvider"
+  },
+  "BearButton": {
+    "prefix": "bearButton",
+    "body": [
+      "import { Button } from '@forgedevstack/bear';",
+      "",
+      "<Button variant=\"${1|primary,outline,ghost|}\" size=\"${2|sm,md,lg|}\">$0</Button>"
+    ],
+    "description": "Bear Button"
+  }
+}
