@@ -1,6 +1,6 @@
 export function getClassAttrValueMatch(prefix: string): RegExpMatchArray | null {
   return (
-    prefix.match(/className\s*=\s*(?:\{\s*)?["']([^"']*)$/) ??
+    prefix.match(/className\s*=\s*(?:\{\s*)?["'`]([^"'`]*)$/) ??
     prefix.match(/\bclass\s*=\s*["']([^"']*)$/)
   );
 }
@@ -8,11 +8,11 @@ export function getClassAttrValueMatch(prefix: string): RegExpMatchArray | null 
 export function insideClassAttrPrefix(prefix: string, lang: string): boolean {
   if (lang === 'html') {
     return (
-      /\bclass(?:Name)?\s*=\s*["'][^"']*$/.test(prefix) || /\bclass\s*=\s*["'][^"']*$/.test(prefix)
+      /\bclass(?:Name)?\s*=\s*["'`][^"'`]*$/.test(prefix) || /\bclass\s*=\s*["'][^"']*$/.test(prefix)
     );
   }
   if (lang === 'typescriptreact' || lang === 'typescript') {
-    return getClassAttrValueMatch(prefix) !== null || /className:\s*["'][^"']*$/.test(prefix);
+    return getClassAttrValueMatch(prefix) !== null || /className:\s*["'`][^"'`]*$/.test(prefix);
   }
   if (lang === 'css') {
     return /@apply\s+[^;]*$/.test(prefix);

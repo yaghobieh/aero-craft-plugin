@@ -39,6 +39,8 @@ function stripImportant(name: string): string {
 
 const docSelector: vscode.DocumentSelector = [
   { language: 'html' },
+  { language: 'javascriptreact' },
+  { language: 'javascript' },
   { language: 'typescriptreact' },
   { language: 'typescript' },
   { language: 'css' },
