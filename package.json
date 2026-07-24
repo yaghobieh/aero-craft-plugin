@@ -2,8 +2,14 @@
   "name": "aerocraft-bear-forgestack",
   "displayName": "AeroCraft & Bear (ForgeStack)",
   "description": "AeroCraft class completions from the real utility catalog, hovers with color swatches, and Bear JSX hints. Optional Tailwind-style alias mode.",
-  "version": "0.1.1",
+  "icon": "images/aerocraft-brand.png",
+  "version": "0.1.2",
   "publisher": "forgestack",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yaghobieh/aero-craft-plugin"
+  },
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -55,7 +61,7 @@
     "package": "vsce package"
   },
   "dependencies": {
-    "@forgedevstack/aerocraft": "git+https://github.com/yaghobieh/aero-craft.git#release/1.0.0"
+    "@forgedevstack/aerocraft": "^1.0.6"
   },
   "devDependencies": {
     "@types/node": "^22.10.7",

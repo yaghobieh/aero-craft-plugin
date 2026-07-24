@@ -2,6 +2,8 @@
 
 ForgeStack editor helpers: filtered **AeroCraft** class completions (dropdown with color chips in the details pane), **Bear** JSX **prop** completions on tags like `Flex` / `Button`, hovers on utilities and components, plus Bear snippets for React.
 
+Pinned to **`@forgedevstack/aerocraft@^1.0.6`**. Completions include ring / divide / content utilities and the unified default palette. When an `aerocraft.config.*` file is present in the workspace, suggestions use that config’s `prefix` and `separator`.
+
 ### Suggest widget vs inline AI
 
 Cursor and Copilot can show **inline ghost text** that hides the normal IntelliSense list. To see the **dropdown** with AeroCraft options, use **Trigger Suggest** (default **Ctrl+Space** on Windows/Linux; on macOS VS Code often uses **Ctrl+Space** as well — check *Keyboard Shortcuts* for `editor.action.triggerSuggest`). You can also try **Editor: Quick Suggestions** settings if the list never appears.
@@ -35,7 +37,7 @@ Install the `.vsix` via **Extensions: Install from VSIX**.
 
 ## Roadmap
 
-- Respect `aerocraft.config` prefix when generating class labels
 - More Bear components in `bearProps.ts`
+- Marketplace publish
 
 MIT — ForgeStack

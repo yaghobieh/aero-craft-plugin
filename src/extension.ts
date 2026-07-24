@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { listResolvedUtilityNames, resolveConfig } from '@forgedevstack/aerocraft';
+import type { AeroCraftConfig } from '@forgedevstack/aerocraft';
 import { UTILITY_ALIAS_SUGGESTIONS } from './aerocraftSuggestions.const';
 import { getColorForUtilityClass } from './aerocraftColorLookup';
 import { BEAR_COMPONENT_HINTS } from './bearComponents.const';
@@ -9,15 +10,21 @@ import {
   filterAeroNames,
   insideClassAttrPrefix,
 } from './classAttr';
+import { loadWorkspaceAeroConfig } from './loadWorkspaceConfig';
 
 const AERO_COMPLETION_CAP = 180;
 const AERO_COMPLETION_CAP_EMPTY = 80;
 
 let cachedAeroNames: string[] | null = null;
+let cachedConfigKey = '';
 
-function allAeroClassNames(): string[] {
-  if (!cachedAeroNames) {
-    cachedAeroNames = listResolvedUtilityNames(resolveConfig({}));
+async function allAeroClassNames(): Promise<string[]> {
+  const workspaceConfig = await loadWorkspaceAeroConfig();
+  const configKey = JSON.stringify(workspaceConfig ?? {});
+  if (!cachedAeroNames || cachedConfigKey !== configKey) {
+    const resolved = resolveConfig((workspaceConfig ?? {}) as AeroCraftConfig);
+    cachedAeroNames = listResolvedUtilityNames(resolved);
+    cachedConfigKey = configKey;
   }
   return cachedAeroNames;
 }
@@ -66,7 +73,7 @@ export function activate(context: vscode.ExtensionContext): void {
   const aeroProvider = vscode.languages.registerCompletionItemProvider(
     docSelector,
     {
-      provideCompletionItems(document, position) {
+      async provideCompletionItems(document, position) {
         const ac = vscode.workspace.getConfiguration('aerocraft');
         if (!ac.get<boolean>('enableCompletions')) {
           return undefined;
@@ -78,7 +85,7 @@ export function activate(context: vscode.ExtensionContext): void {
         }
         const token = currentClassNameToken(prefix, lang);
         const cap = token.length === 0 ? AERO_COMPLETION_CAP_EMPTY : AERO_COMPLETION_CAP;
-        const names = filterAeroNames(allAeroClassNames(), token, cap);
+        const names = filterAeroNames(await allAeroClassNames(), token, cap);
         const alias = ac.get<boolean>('utilityAliasMode');
         const range = new vscode.Range(
           position.line,
@@ -149,50 +156,29 @@ export function activate(context: vscode.ExtensionContext): void {
           const tag = document.getText(tagRange);
           const hint = BEAR_COMPONENT_HINTS[tag];
           if (hint) {
-            const md = new vscode.MarkdownString(hint);
-            md.isTrusted = true;
-            return new vscode.Hover(md, tagRange);
+            return new vscode.Hover(new vscode.MarkdownString(hint));
           }
         }
       }
-      const prefix = linePrefix(document, position);
-      const lang = document.languageId;
-      if (!insideClassAttrPrefix(prefix, lang)) {
-        return undefined;
-      }
-      const range =
-        document.getWordRangeAtPosition(position, /!?[\w:[\]#%,./-]+!?/) ??
-        document.getWordRangeAtPosition(position);
+      const range = document.getWordRangeAtPosition(position, /[!]?[\w.:@[\]/-]+!?/);
       if (!range) return undefined;
-      const raw = document.getText(range);
-      const token = stripImportant(raw);
-      const md = new vscode.MarkdownString();
-      md.supportHtml = true;
-      md.isTrusted = true;
-
-      const color = getColorForUtilityClass(token);
-      if (color) {
-        md.appendMarkdown(
-          `<span style="display:inline-block;width:14px;height:14px;border-radius:4px;border:1px solid #888;background:${color};vertical-align:middle;margin-right:6px"></span>`,
-        );
-      }
-
-      const inCatalog = allAeroClassNames().includes(token);
-      if (inCatalog) {
-        md.appendMarkdown(`**AeroCraft** \`${token}\`${color ? ` — \`${color}\`` : ''}\n\n`);
-      } else if (color) {
-        md.appendMarkdown(`**Color** \`${token}\` — \`${color}\`\n\n`);
-      }
-
-      if (md.value.length === 0) {
-        return undefined;
-      }
-
-      return new vscode.Hover(md, range);
+      const word = document.getText(range);
+      const doc = aeroDocumentation(word);
+      if (!doc) return undefined;
+      return new vscode.Hover(doc, range);
     },
   });
 
-  context.subscriptions.push(aeroProvider, bearPropsProvider, hover);
+  const watcher = vscode.workspace.createFileSystemWatcher('**/aerocraft.config.*');
+  const invalidate = () => {
+    cachedAeroNames = null;
+    cachedConfigKey = '';
+  };
+  watcher.onDidChange(invalidate);
+  watcher.onDidCreate(invalidate);
+  watcher.onDidDelete(invalidate);
+
+  context.subscriptions.push(aeroProvider, bearPropsProvider, hover, watcher);
 }
 
 export function deactivate(): void {}
